@@ -55,25 +55,36 @@
 
 
 <script>
-    var offset = -800;
+    var offsetX = 0;
 
     window.onload = function () {
-        // console.log(document.getElementById('carousel'));
-        var ci = document.getElementById('carousel-inner');
-        // 设置过度属性
-        // ci.style.transition = 'left linear 500ms';
-        setInterval(function () {
-            if (offset === 0) {
-                ci.style.transition = '';
+        // 获取容器节点
+        var carouselInner = document.getElementById('carousel-inner');
+        carouselInner.style.transition = 'left linear 300ms';
+        // 启动定时器
+        var carouselInterval = setInterval(function () {
+            // x坐标减法
+            offsetX -= 800;
+            // 判断是是否是最后一帧
+            if (offsetX === -2400) {
+                carouselInner.style.left = offsetX + 'px';
+                // 执行完动画之后取消动画效果
+                setTimeout(function () {
+                    carouselInner.style.transition = '';
+                    carouselInner.style.left = 0 + 'px';
+                    setTimeout(function () {
+                        carouselInner.style.transition = 'left linear 300ms';
+                    }, 100);
+                }, 300);
             } else {
-                ci.style.transition = 'left linear 500ms';
+                carouselInner.style.left = offsetX + 'px';
             }
-            ci.style.left = offset + 'px';
-            offset -= 800;
-            if (offset <= -3200) {
-                offset = 0;
+
+            // 判断最后一帧执行完复原x坐标
+            if (offsetX === -2400) {
+                offsetX = 0;
             }
-        }, 1000);
+        },1000);
     }
 </script>
 
