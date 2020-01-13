@@ -23,7 +23,7 @@
 </head>
 <body>
 <!-- 轮播图容器 -->
-<div class="carousel" id="carousel">
+<div class="carousel" id="carousel" interval="1500">
     <!-- 内部图片容器 -->
     <div class="carousel-inner" id="carousel-inner">
         <div class="carousel-item">
@@ -44,47 +44,64 @@
                 <text fill="#333" dy=".3em" x="50%" y="50%">Third slide</text>
             </svg>
         </div>
-        <div class="carousel-item">
-            <svg width="800" height="400">
-                <rect fill="#777" width="100%" height="100%"></rect>
-                <text fill="#555" dy=".3em" x="50%" y="50%">First slide</text>
-            </svg>
-        </div>
     </div>
 </div>
 
-
 <script>
-    var offsetX = 0;
-
     window.onload = function () {
-        // 获取容器节点
-        var carouselInner = document.getElementById('carousel-inner');
+        // 先声明需要用到的变量
+        // 获取整个轮播图容器的节点
+        const carousel = document.getElementById('carousel');
+
+        // 获取inner容器节点
+        const carouselInner = document.getElementById('carousel-inner');
+
+        // 复制第一个子节点作为容器最后一个子节点
+        const copyTmp = carouselInner.getElementsByClassName('carousel-item')[0].cloneNode(true);
+        carouselInner.appendChild(copyTmp);
+
+        // 设置过度动画效果
         carouselInner.style.transition = 'left linear 300ms';
-        // 启动定时器
-        var carouselInterval = setInterval(function () {
+
+        // 轮播图x轴的偏移量,初始为0
+        let offsetX = 0;
+
+        // 读取轮播图容器的宽度作为递增量
+        let stepX = carousel.clientWidth;
+
+        // 获取轮播项数量
+        let itemCount = carouselInner.getElementsByClassName('carousel-item').length - 1;
+
+        // 读取容器上的自定义属性来作为图片切换时间间隔,值要大于等于1000
+        let intervalTime = Number(carousel.getAttribute('interval'));
+        // 处理默认值
+        intervalTime = intervalTime && intervalTime >= 1000 ? intervalTime : 3000;
+
+        // 声明自动轮播函数，需要传入到定时器中使用
+        const autoPlayFunc = function () {
             // x坐标减法
-            offsetX -= 800;
+            offsetX -= stepX;
             // 判断是是否是最后一帧
-            if (offsetX === -2400) {
+            if (offsetX === -stepX * itemCount) {
                 carouselInner.style.left = offsetX + 'px';
                 // 执行完动画之后取消动画效果
-                setTimeout(function () {
+                setTimeout(() => {
                     carouselInner.style.transition = '';
-                    carouselInner.style.left = 0 + 'px';
-                    setTimeout(function () {
+                    carouselInner.style.left = '0px';
+                    setTimeout(() => {
                         carouselInner.style.transition = 'left linear 300ms';
                     }, 100);
                 }, 300);
+                offsetX = 0;
             } else {
                 carouselInner.style.left = offsetX + 'px';
             }
 
-            // 判断最后一帧执行完复原x坐标
-            if (offsetX === -2400) {
-                offsetX = 0;
-            }
-        },1000);
+        };
+
+        // 启动定时器让图片自动轮播
+        let carouselInterval = setInterval(autoPlayFunc, intervalTime);
+
     }
 </script>
 

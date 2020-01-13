@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>在不同分辨率下保持图片比例</title>
+    <link rel="stylesheet" href="/web-front-end-example/public/css/reset.css">
+    <!--
+        以设计师设计的首页banner图为例
+        设计师以1920的分辨率来设计banner，给出的尺寸是1920*500，通过计算高为宽度的26%
+        实现原理，width的百分比是根据父元素的宽度来计算，padding的百分比也是根据父元素的宽度来计算
+        使用width+padding百分比来控制div的尺寸，用背景图来显示图片
+     -->
+    <style>
+        .keep {
+            width: 100%;
+            height: 0;
+            padding-bottom: 26%;
+            background-image: url('https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/0a066d0bd20d037cc6f4210e16f65ab3.jpg?w=2452&h=920');
+            background-size: 100% 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="keep"></div>
+</body>
+</html>
